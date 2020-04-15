@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script src="static/js/jquery.dependent.fields.js"></script>
+
+
+<div class="container">
+    <form action="" method="post" role="form" enctype="multipart/form-data"> 
+        <div class="form-group">
+            <label for="category">Arquivos para selecionar para análise</label>
+            <select id="category" name='category' multiple class="form-control"> // addition here
+                {% for opt in options %}
+                    <option>  {{ opt }} </option>
+                {% endfor %}
+            </select>
+        </div>
+          <p>
+            <label for="analise">
+             Opções de Análise 
+            </label>
+            <select id="master-dropdown" name="analise" value="" class="">
+              <option value="">-- Selecione uma análise--</option>
+              <option value="univariada">Univariada</option>
+              <option value="multivariada">Multivariada</option>
+              <option value="vias">Vias metabólicas</option>
+            </select>
+          </p>
+
+        <p>
+        <label for="dependent-dropdown1">
+         Análises univariadas 
+        </label>
+        <select id="dependent-dropdown1" name="univar">
+          <option value="">-- Selecione uma análise Univariada--</option>
+          <option value="ttest">t-test</option>
+          <option value="kruskal">Kruskal</option>
+        </select>
+        </p>
+
+        <p>
+        <label for="dependent-dropdown2">
+         Análises multivariadas 
+        </label>
+        <select id="dependent-dropdown2"  name="mult">
+          <option value="">-- Selecione uma análise multivariada --</option>
+          <option value="pcoa">PCoA</option>
+          <option value="heat">Heatmap</option>
+          <option value="arv">Arvore de Decisão</option>
+        </select>
+        </p>
+        <button type="submit" class="btn btn-primary">Submeter</button>
+    </form>
+</div>
+<script>
+$('#dependent-dropdown1').dependsOn('#master-dropdown', ['univariada']);
+$('#dependent-dropdown2').dependsOn('#master-dropdown', ['multivariada']);
+$('#dependent-dropdown3').dependsOn('#master-dropdown', ['vias']);
+</script>
+
+{% endblock %}
