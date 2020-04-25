@@ -15,6 +15,17 @@
                 {% endfor %}
             </select>
         </div>
+         <p>
+         <label for="exampleInputEmail1">Classe para Análise</label>
+         <input type="text" class="form-control" id="mfield"  name="mfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos metadados">
+        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para metadados ajuda.</small>
+        </p>
+         <p>
+         <label for="exampleInputEmail2">Variável para Análise</label>
+         <input type="text" class="form-control" id="dfield"  name="dfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos dados">
+        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para variável ajuda.</small>
+        </p>
+
           <p>
             <label for="analise">
              Opções de Análise 
@@ -23,7 +34,7 @@
               <option value="">-- Selecione uma análise--</option>
               <option value="univariada">Univariada</option>
               <option value="multivariada">Multivariada</option>
-              <option value="vias">Vias metabólicas</option>
+              <option value="correlacao">Rede de Correlação</option>
             </select>
           </p>
 
@@ -33,8 +44,9 @@
         </label>
         <select id="dependent-dropdown1" name="univar">
           <option value="">-- Selecione uma análise Univariada--</option>
-          <option value="ttest">t-test</option>
+          <option value="anova">Anova</option>
           <option value="kruskal">Kruskal</option>
+          <option value="boxplot">Boxplot</option>
         </select>
         </p>
 

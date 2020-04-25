@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask_dropzone import Dropzone
+
+from api.compute import compute
 
 import uuid
 import json
 import os
+import re
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -19,7 +22,7 @@ class NpEncoder(json.JSONEncoder):
 app = Flask(__name__)
 
 app.config.update(
-    UPLOADED_PATH= 'static/uploads',
+    UPLOADED_PATH= 'api/static/uploads',
     # Flask-Dropzone config:
     DROPZONE_ALLOWED_FILE_TYPE='text',
     DROPZONE_MAX_FILE_SIZE=3,
@@ -30,7 +33,7 @@ dropzone = Dropzone(app)
 
 @app.route('/')
 def index():
-    return 'Hello, World!'
+    return render_template('home.html')
 
 @app.route('/graph')
 def graph():
@@ -70,13 +73,40 @@ def upload():
 def analysis():
     options = os.listdir(app.config['UPLOADED_PATH'])
     if request.method == 'POST':
-        form_dict = request.form
-        as_dict = request.form.getlist('category')
+        form_dict = dict(request.form)
+        data_list = request.form.getlist('category')
         print(form_dict)
-        print(as_dict)
+        print(data_list)
+        compute(form_dict, data_list, str(uuid.uuid4()))
+        return redirect(url_for('results'))
     return render_template('analysis.html', options=options)
 
 
+@app.route('/results')
+def results():
+    fls = os.listdir('api/static/results')
+    meas = [x.split('###') for x in fls]
+    for i in range(len(meas)):
+        tmp = meas[i]
+        url = '/static/results/%s' % '###'.join(tmp)
+        #link = f'<a href="{url}" target="_blank">File</a>'
+        link = url
+        tmp = [re.sub('.tsv$|.pdf$|.gml$', '', x) for x in tmp]
+        tmp.append(link)
+        meas[i] = tmp
+    ddffinal = json.dumps(meas, cls=NpEncoder)
+    return render_template('results.html',
+                           dffinal=ddffinal)
+
+
+@app.route('/download')
+def download():
+    taskid = request.args.get('taskid')
+    dr = os.path.join('api/static/results')
+    fls = os.listdir(dr)
+    fls = [x for x in fls if taskid in x][0]
+    fls = 'static/results/%s' % fls
+    return send_file(fls, as_attachment=True)
 
 if __name__ == '__main__':
     #app.run(debug=True)
