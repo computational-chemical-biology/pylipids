@@ -61,6 +61,34 @@
           <option value="arv">Arvore de Decisão</option>
         </select>
         </p>
+
+         <p>
+         <label for="dependent-dropdown4">Classe para colorir dendrograma</label>
+         <input id="dependent-dropdown4" type="text" class="form-control" id="mdfield"  name="mdfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos metadados">
+        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para metadados ajuda.</small>
+        </p>
+
+        <p>
+        <label for="dependent-dropdown6">
+         Mapas de cores 
+        </label>
+        <select id="dependent-dropdown6"  name="cmap">
+          <option value="">-- Selecione uma análise multivariada --</option>
+          <option value="YlGnBu">Amarelo-Verde-Azul</option>
+          <option value="Blues">Azuis</option>
+          <option value="BuPu">Azul-Púrpura</option>
+          <option value="Greens">Verdes</option>
+          <option value="coolwarm">Frio-Quente</option>
+
+        </select>
+        </p>
+
+
+         <p>
+         <input type="checkbox" class="form-check-input" id="dependent-dropdown5" name="mtrans">
+         <label class="form-check-label" for="dependent-dropdown5">Transpor matriz</label>
+         </p>
+
         <button type="submit" class="btn btn-primary">Submeter</button>
     </form>
 </div>
@@ -68,6 +96,9 @@
 $('#dependent-dropdown1').dependsOn('#master-dropdown', ['univariada']);
 $('#dependent-dropdown2').dependsOn('#master-dropdown', ['multivariada']);
 $('#dependent-dropdown3').dependsOn('#master-dropdown', ['vias']);
+$('#dependent-dropdown4').dependsOn('#dependent-dropdown2', ['heat']);
+$('#dependent-dropdown5').dependsOn('#dependent-dropdown2', ['heat']);
+$('#dependent-dropdown6').dependsOn('#dependent-dropdown2', ['heat']);
 </script>
 
 {% endblock %}

@@ -12,7 +12,7 @@ UPLOADS = 'api/static/uploads'
 RESULTS = 'api/static/results'
 
 def compute(params, data_list, uid):
-    metaname = [x for x in data_list if 'metadados' in x][0]
+    metaname = [x for x in data_list if 'metadados' in x.lower()][0]
     if metaname:
         meta = pd.read_csv(os.path.join(UPLOADS, metaname), sep='\t')
     else:
@@ -77,7 +77,16 @@ def compute(params, data_list, uid):
             now = datetime.now().strftime("%d|%m|%Y-%H:%M:%S")
             filename = f"{uid}###heatmap###All###{now}.pdf"
             dout = os.path.join(RESULTS, filename)
-            dendrogram(data, meta, filename=dout)
+            if 'cmap' in params.keys():
+                cmap = params['cmap']
+            else:
+                cmap = 'Blues'
+            if 'mtrans' in params.keys():
+                dendrogram(data, meta, cmap=cmap, transp=params['mtrans'],
+                           color_block=params['mdfield'], filename=dout)
+            else:
+                dendrogram(data, meta, cmap=cmap, color_block=params['mdfield'],
+                           filename=dout)
         elif params['mult']=='arv':
             now = datetime.now().strftime("%d|%m|%Y-%H:%M:%S")
             filename = f"{uid}###decision-tree###All###{now}.pdf"
