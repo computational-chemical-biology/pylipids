@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file
+from flask import Flask, flash, render_template, request, redirect, url_for, send_file
 from flask_dropzone import Dropzone
 
 from api.compute import compute
@@ -7,6 +7,7 @@ import uuid
 import json
 import os
 import re
+import sys
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -20,6 +21,7 @@ class NpEncoder(json.JSONEncoder):
             return super(NpEncoder, self).default(obj)
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config.update(
     UPLOADED_PATH= 'api/static/uploads',
@@ -72,14 +74,19 @@ def upload():
 @app.route('/analysis', methods=['POST', 'GET'])
 def analysis():
     options = os.listdir(app.config['UPLOADED_PATH'])
+    error = None
     if request.method == 'POST':
         form_dict = dict(request.form)
         data_list = request.form.getlist('category')
-        print(form_dict)
-        print(data_list)
-        compute(form_dict, data_list, str(uuid.uuid4()))
-        return redirect(url_for('results'))
-    return render_template('analysis.html', options=options)
+        try:
+            compute(form_dict, data_list, str(uuid.uuid4()))
+            flash('Sua análise foi executada!')
+            return redirect(url_for('results'))
+        except BaseException as e:
+            error = str(e)
+            print(error)
+            render_template('analysis.html', options=options, error=error)
+    return render_template('analysis.html', options=options, error=error)
 
 
 @app.route('/results')

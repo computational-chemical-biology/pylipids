@@ -4,8 +4,10 @@
 
 <script src="static/js/jquery.dependent.fields.js"></script>
 
-
 <div class="container">
+   {% if error %}
+     <p class=error><strong>Error:</strong> {{ error }}
+   {% endif %}
     <form action="" method="post" role="form" enctype="multipart/form-data"> 
         <div class="form-group">
             <label for="category">Arquivos para selecionar para análise</label>
